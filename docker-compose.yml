@@ -48,10 +48,32 @@ services:
       - 7000:7000
     volumes:
       - ./app-volume/cassandra:/bitnami/cassandra
-
     environment:
       CASSANDRA_TRANSPORT_PORT_NUMBER: 7000
       CASSANDRA_USER: cassandra-dev
       CASSANDRA_PASSWORD: cassandra-dev-pass
       CASSANDRA_HOST: localhost
+  
+  # Postgres SQL database for Auth and other small, structured data.
+  postgres:
+    image: postgres:latest
+    networks:
+      - app
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - ./app-volume/postgres:/postgres
+    environment:
+      POSTGRES_USER: postgres-dev
+      POSTGRES_PASSWORD: postgres-dev-pass
+  adminer:
+    image: adminer:latest
+    networks:
+      - app
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgres
     
